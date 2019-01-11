@@ -15,7 +15,6 @@ static char * mystr = "hello";
 static int myarr[3] = {4,5,6};
  
 module_param(myint,int, 0644);
- 
 MODULE_PARM_DESC(myint,"test param int");
  
 module_param(myshort,short,0);
@@ -26,21 +25,6 @@ MODULE_PARM_DESC(mystr,"test param str");
  
 module_param_array(myarr,int, NULL, 0644);
 MODULE_PARM_DESC(myarr,"test param arr");
-
-int extern_num = 0x5A5A5A5A;
-EXPORT_SYMBOL_GPL(extern_num);
-
-void print_hello(void)
-{
-	printk("hello this is a module_extern func\n");
-}
-EXPORT_SYMBOL_GPL(print_hello);
-void print_bye(void)
-{
-	printk("bye this is a module_extern func\n");
-}
-EXPORT_SYMBOL_GPL(print_bye);
-
 
 static int __init first_init(void)
 {

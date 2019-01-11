@@ -4,16 +4,12 @@
 # kernel build system and can use its language.
 ifneq ($(KERNELRELEASE),)
 	#这部分第二次执行
-	obj-m += hello1.o
-	obj-m += test_depend.o
+	obj-m += hello.o
 	# Otherwise we were called directly from the command
 	# line; invoke the kernel build system.
 else
 	#这部分第一次执行
-	#KERNELDIR ?= /lib/modules/$(shell uname -r)/build
-	KERNELDIR ?=/home/baiy/code/iTop4412_Kernel_3.0
-	#$(MAKE) -C $(KERNELDIR) M=$(PWD) modules_install INSTALL_MOD_PATH=/home/baiy/code/driver-test/test01
-
+	KERNELDIR ?= /lib/modules/$(shell uname -r)/build
 	PWD := $(shell pwd)
 default:
 	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules

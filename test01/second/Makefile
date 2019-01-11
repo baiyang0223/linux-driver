@@ -10,7 +10,8 @@ ifneq ($(KERNELRELEASE),)
 	# line; invoke the kernel build system.
 else
 	#这部分第一次执行
-	KERNELDIR ?= /lib/modules/$(shell uname -r)/build
+	#KERNELDIR ?= /lib/modules/$(shell uname -r)/build
+	KERNELDIR ?=/home/baiy/code/iTop4412_Kernel_3.0
 	PWD := $(shell pwd)
 default:
 	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules
