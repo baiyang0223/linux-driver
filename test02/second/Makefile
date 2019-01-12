@@ -4,7 +4,7 @@
 # kernel build system and can use its language.
 ifneq ($(KERNELRELEASE),)
 	#这部分第二次执行
-	obj-m := hello.o
+	obj-m := proc_debug.o
 	# Otherwise we were called directly from the command
 	# line; invoke the kernel build system.
 else
@@ -17,4 +17,4 @@ default:
 endif
  
 clean:
-	rm -rf *.ko .*.ko.cmd  *.mod.c  *.mod.o .*.mod.o.cmd *.o .*.o.cmd modules.order  Module.symvers .tmp_versions lib .cache.mk
+	rm -rf *.ko .*.ko.cmd  *.mod.c  *.mod.o .*.mod.o.cmd *.o .*.o.cmd modules.order  Module.symvers .tmp_versions lib

@@ -5,7 +5,6 @@
 #include <linux/module.h>
 #include <linux/printk.h>
 
- 
 static int __init hello_init(void)
 {
     printk(KERN_INFO"%s,%s,line=%d\n",__FILE__,__func__,__LINE__);
@@ -22,7 +21,7 @@ static void __exit hello_exit(void)
 }
 
 module_init(hello_init);
-module_exit(hello_exit); 
+module_exit(hello_exit);
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("baiy <baiyang0223@163.com>");
