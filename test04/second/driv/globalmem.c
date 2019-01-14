@@ -42,11 +42,22 @@ struct globalmem_dev {
 struct globalmem_dev *globalmem_devp;
 
 
+static void dump_filp(const struct file * filp)
+{
+    //unsigned long count = atomic_long_read(&filp->f_count);
+    unsigned long count = 0;
+    printk("%s - %d: dump_file info:%p",__func__,__LINE__, filp);
+    printk("\tfop=%p,private=%p,pos=%p-0x%llx, f_inode=%p\n",filp->f_op,filp->private_data,&filp->f_pos,filp->f_pos,filp->f_inode);
+    printk("\tflags=0x%x,mode = 0x%lx,count=0x%lx,version=0x%lx\n",filp->f_flags,(unsigned long)filp->f_mode,(unsigned long)count,(unsigned long)filp->f_version);
+    return;
+}
+
 static int globalmem_open(struct inode *inode, struct file *filp)
 {
 	struct globalmem_dev * devp = container_of(inode->i_cdev, struct globalmem_dev, cdev);
 	filp->private_data = devp;
 	pr_info("open globalmem\n");
+    dump_filp(filp);
 	return 0;
 }
 

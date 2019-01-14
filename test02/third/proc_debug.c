@@ -28,7 +28,7 @@ struct proc_dir_entry *proc_dir, *proc_file;
 static int debug_proc_show(struct seq_file *seq, void *v)
 {
     int * ptr_var = seq->private;
-    seq_printf(seq, "0x%x\n", *ptr_var);
+    seq_printf(seq,"seq = %p,v=%p ptr_var = %p-%#x\n",seq,v,ptr_var,*ptr_var);
     return 0;
 }
 
@@ -54,6 +54,8 @@ ssize_t debug_proc_write(struct file *file, const char __user *buffer, size_t co
     temp_buf[len] = '\0';
     *ptr_var = simple_strtoul(temp_buf, NULL, 10);
 
+    printk("write ptr_var: filp->private(seq file)=%p,ptr_var = %p-%u\n",\
+            file->private_data, ptr_var, *ptr_var);
     return count;
 }
 
