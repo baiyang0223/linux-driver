@@ -21,9 +21,9 @@
 
 #define MAGIC_NUM 'G'
 #define TEST_01 _IO(MAGIC_NUM,1)
-#define TEST_02 _IOR(MAGIC_NUM,2)
-#define TEST_03 _IOW(MAGIC_NUM,3)
-#define TEST_04 _IORW(MAGIC_NUM,4)
+#define TEST_02 _IOR(MAGIC_NUM,2,int)
+#define TEST_03 _IOW(MAGIC_NUM,3,int) //读写一个int数据,size大小可自己填写。
+#define TEST_04 _IOWR(MAGIC_NUM,4,100)
 #define TEST_MAX _IO(MAGIC_NUM,5)
 
 
@@ -55,9 +55,14 @@ static int testioctl_release(struct inode *inode, struct file *filp)
 }
 
 static long testioctl_ioctl(struct file *filp, unsigned int cmd,
-			    unsigned long arg)
+			    unsigned long args)
 {
+
 	struct testioctl_dev *dev = filp->private_data;
+	char buf[100] = {0};
+	int  ioarg;
+	int  retval;
+	int  err;
 
 	/*检查类型，幻数是否正确*/
 	if(_IOC_TYPE(cmd)!=MAGIC_NUM)
@@ -70,26 +75,61 @@ static long testioctl_ioctl(struct file *filp, unsigned int cmd,
 	/*检测读写权限属性*/
 	/*
 	if(_IOC_DIR(cmd) & _IOC_READ)
-		err = !access_ok(VERIFY_WRITE,(void *)args,_IOC_SIZE(cmd));
-	else if(_IOC_DIR(cmd) & _IOC_WRITE)
 		err = !access_ok(VERIFY_READ,(void *)args,_IOC_SIZE(cmd));
+	else if(_IOC_DIR(cmd) & _IOC_WRITE)
+		err = !access_ok(VERIFY_WRITE,(void *)args,_IOC_SIZE(cmd));
 	// 这里测试方向，所以暂时不反悔
 	if(err)
 		return -EFAULT;
 	*/
+
 	switch (cmd) {
 	case TEST_01:
 		pr_info("%s-%d: cmd is test01\n", __func__, __LINE__);
 		break;
+
 	case TEST_02:
-		pr_info("%s-%d: cmd is test02\n", __func__, __LINE__);
+		if(_IOC_DIR(cmd) & _IOC_READ)
+			err = !access_ok(VERIFY_READ,(void *)args,_IOC_SIZE(cmd));
+		if(err)
+			return -EFAULT;
+		ioarg = 0xA5A5A5A5;
+		retval =   __put_user(ioarg,(int *)args);
+		pr_info("%s-%d: cmd is test02-put %#x,_IOC_SIZE(cmd) is %d\n", \
+			__func__, __LINE__,ioarg,_IOC_SIZE(cmd));
 		break;
+
 	case TEST_03:
-		pr_info("%s-%d: cmd is test03\n", __func__, __LINE__);
+		if(_IOC_DIR(cmd) & _IOC_WRITE)
+			err = !access_ok(VERIFY_WRITE,(void *)args,_IOC_SIZE(cmd));
+		if(err)
+			return -EFAULT;
+
+		retval =   __get_user(ioarg,(int *)args);
+		pr_info("%s-%d: cmd is test03-get %#x\n", __func__, __LINE__,ioarg);
 		break;
+
+	/*				
 	case TEST_04:
-		pr_info("%s-%d: cmd is test04\n", __func__, __LINE__);
+		if(_IOC_DIR(cmd) & _IOC_READ)
+			err = !access_ok(VERIFY_READ,(void *)args,_IOC_SIZE(cmd));
+		if(err)
+			return -EFAULT;
+		if(_IOC_DIR(cmd) & _IOC_WRITE)
+			err = !access_ok(_IOC_WRITE,(void *)args,_IOC_SIZE(cmd));
+		if(err)
+			return -EFAULT;
+		
+		retval = copy_from_user(buf,(void *)args, 100);
+		pr_info("%s-%d: cmd is test04，read %s, write %s\n", 
+			__func__, __LINE__,buf,"nice to meet you,too.");
+	
+		memset(buf,0,100);
+		strcpy(buf,"nice to meet you,too.");
+		retval = copy_to_user((void *)args, 100,buf);
+		
 		break;
+	*/
 	default:
 		return -EINVAL;
 	}
