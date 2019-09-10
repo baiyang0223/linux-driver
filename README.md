@@ -10,10 +10,22 @@ test01: 驱动入口和出口函数，https://blog.csdn.net/sven0223/article/det
 
 test02: 学习kobject相关函数，procfs,devfs,sysfs相关
 
-test04: 1.学习字符驱动基础部分
+test03: 学习内核链表、kfifo、Hash表
 
-test05: 1.学习内核并发和竞态
+test04: 学习字符驱动
 
-test06: 1.学习内核的阻塞和非阻塞
+test05: 中断、时钟
+
+test06: 内存与IO访问
+
+test07: 设备树与软件架构
+
+test08: pinmux配置
+
+test09: 常用典型设备驱动架构
+
+
+
+
 
 
